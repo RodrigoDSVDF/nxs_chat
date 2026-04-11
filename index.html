@@ -3,262 +3,521 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>A Decis\u00e3o</title>
+<title>A Decisão</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --ink: #0a0a0f;
-  --paper: #f5f0e8;
   --gold: #c9a84c;
   --gold-light: #e8d08a;
-  --red: #8b1a1a;
   --muted: #7a7060;
-  --line: rgba(201,168,76,0.25);
+  --line: rgba(201,168,76,0.22);
 }
-
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
 html, body {
   height:100%; width:100%;
   background: var(--ink);
   font-family: 'DM Sans', sans-serif;
-  overflow: hidden;
-  position: fixed;
+  overflow:hidden; position:fixed;
 }
-
-/* \u2500\u2500 CANVAS PART\u00cdCULAS \u2500\u2500 */
-#bg-canvas {
-  position:fixed; inset:0; z-index:1;
-  pointer-events:none;
-}
-
-/* \u2500\u2500 WRAPPER \u2500\u2500 */
+#bg-canvas { position:fixed; inset:0; z-index:1; pointer-events:none; }
 .shell {
-  position: absolute; inset:0; z-index:10;
+  position:absolute; inset:0; z-index:10;
   display:flex; flex-direction:column;
   height:100vh; height:100dvh;
 }
-
-/* \u2500\u2500 HEADER \u2500\u2500 */
 .top-bar {
   flex-shrink:0;
-  padding: 18px 20px 14px;
+  padding:18px 20px 14px;
   display:flex; align-items:center; justify-content:space-between;
-  background: linear-gradient(to bottom, rgba(10,10,15,0.98), transparent);
+  background:linear-gradient(to bottom,rgba(10,10,15,0.98),transparent);
 }
-
 .brand {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.8rem;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--gold);
+  font-family:'Playfair Display',serif;
+  font-size:0.78rem; letter-spacing:4px;
+  text-transform:uppercase; color:var(--gold);
 }
-
-.progress-ring {
-  width:36px; height:36px; position:relative;
-}
-.progress-ring svg { transform: rotate(-90deg); }
+.progress-ring { width:36px; height:36px; position:relative; }
+.progress-ring svg { transform:rotate(-90deg); }
 .progress-ring circle { fill:none; stroke-width:2; }
-.ring-bg { stroke: rgba(201,168,76,0.2); }
+.ring-bg   { stroke:rgba(201,168,76,0.2); }
 .ring-fill {
-  stroke: var(--gold);
-  stroke-dasharray: 88;
-  stroke-dashoffset: 88;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.6s ease;
+  stroke:var(--gold);
+  stroke-dasharray:88; stroke-dashoffset:88;
+  stroke-linecap:round;
+  transition:stroke-dashoffset 0.7s ease;
 }
 .ring-label {
   position:absolute; inset:0;
   display:flex; align-items:center; justify-content:center;
   font-size:9px; font-weight:500; color:var(--gold);
 }
-
-/* \u2500\u2500 CHAT FEED \u2500\u2500 */
 #feed {
-  flex:1;
-  overflow-y:auto;
-  padding: 16px 20px 8px;
+  flex:1; overflow-y:auto;
+  padding:16px 20px 8px;
   display:flex; flex-direction:column; gap:16px;
-  -webkit-overflow-scrolling: touch;
-  mask-image: linear-gradient(to bottom, transparent, black 6%, black 94%, transparent);
+  -webkit-overflow-scrolling:touch;
+  mask-image:linear-gradient(to bottom,transparent,black 6%,black 94%,transparent);
 }
-
-/* scrollbar invis\u00edvel */
 #feed::-webkit-scrollbar { display:none; }
-
-/* \u2500\u2500 BOLHAS \u2500\u2500 */
-.msg {
-  animation: rise 0.45s cubic-bezier(0.16,1,0.3,1) forwards;
-  opacity:0;
-  position:relative;
-}
-
+.msg { animation:rise 0.45s cubic-bezier(0.16,1,0.3,1) forwards; opacity:0; }
 .msg.ai .inner {
-  max-width: 86%;
-  background: rgba(15,14,20,0.92);
-  border: 1px solid var(--line);
-  border-radius: 2px 18px 18px 18px;
-  padding: 14px 18px;
-  color: #e8e4d8;
-  font-size: 0.93rem;
-  line-height: 1.7;
+  max-width:86%;
+  background:rgba(15,14,20,0.92);
+  border:1px solid var(--line);
+  border-radius:2px 18px 18px 18px;
+  padding:14px 18px;
+  color:#e8e4d8;
+  font-size:0.93rem; line-height:1.75;
   position:relative;
-  backdrop-filter: blur(8px);
+  backdrop-filter:blur(8px);
 }
-
-/* linha dourada lateral */
 .msg.ai .inner::before {
-  content:'';
-  position:absolute;
-  left:0; top:12px; bottom:12px;
-  width:2px;
-  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  content:''; position:absolute;
+  left:0; top:12px; bottom:12px; width:2px;
+  background:linear-gradient(to bottom,transparent,var(--gold),transparent);
   border-radius:2px;
 }
-
-.msg.user {
-  align-self:flex-end;
-}
-.msg.user .inner {
-  background: linear-gradient(135deg, #1a1408 0%, #2a1f08 100%);
-  border: 1px solid rgba(201,168,76,0.4);
-  border-radius: 18px 2px 18px 18px;
-  padding: 12px 18px;
-  color: var(--gold-light);
-  font-size: 0.9rem;
-  font-weight:500;
-  max-width:82%;
-  text-align:right;
-}
-
-/* DESTAQUE em it\u00e1lico dourado */
 .msg.ai .inner em {
   font-style:italic;
-  color: var(--gold-light);
-  font-family: 'Playfair Display', serif;
+  color:var(--gold-light);
+  font-family:'Playfair Display',serif;
 }
-
-/* Cursor piscante */
-.cursor-blink::after {
-  content:'\u258d';
-  color:var(--gold);
-  animation: blink 0.7s infinite;
-  font-size:0.8rem;
-  margin-left:2px;
+.msg.user { align-self:flex-end; }
+.msg.user .inner {
+  background:linear-gradient(135deg,#1a1408,#2a1f08);
+  border:1px solid rgba(201,168,76,0.4);
+  border-radius:18px 2px 18px 18px;
+  padding:12px 18px;
+  color:var(--gold-light);
+  font-size:0.9rem; font-weight:500;
+  max-width:82%; text-align:right;
 }
-
-/* \u2500\u2500 DIVISOR NARRATIVO \u2500\u2500 */
 .chapter-divider {
   display:flex; align-items:center; gap:12px;
-  opacity:0;
-  animation: rise 0.5s ease forwards;
-  margin: 4px 0;
+  opacity:0; animation:rise 0.5s ease forwards; margin:4px 0;
 }
 .chapter-divider span {
-  font-family: 'Playfair Display', serif;
-  font-style:italic;
-  font-size:0.7rem;
-  color: var(--gold);
-  letter-spacing:2px;
-  white-space:nowrap;
-  opacity:0.7;
+  font-family:'Playfair Display',serif;
+  font-style:italic; font-size:0.68rem;
+  color:var(--gold); letter-spacing:2px;
+  white-space:nowrap; opacity:0.7;
 }
-.chapter-divider::before, .chapter-divider::after {
-  content:''; flex:1;
-  height:1px;
-  background: linear-gradient(to right, transparent, var(--gold), transparent);
+.chapter-divider::before,
+.chapter-divider::after {
+  content:''; flex:1; height:1px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
   opacity:0.3;
 }
-
-/* \u2500\u2500 INPUT ZONE \u2500\u2500 */
-.input-zone {
-  flex-shrink:0;
-  padding: 10px 16px;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  background: rgba(10,10,15,0.97);
-  border-top: 1px solid var(--line);
-  display:flex; gap:10px; align-items:flex-end;
-}
-
-.text-box {
-  flex:1;
-  background: rgba(201,168,76,0.06);
-  border: 1px solid rgba(201,168,76,0.2);
-  border-radius: 4px;
-  padding: 12px 16px;
-  color: var(--paper);
-  font-size: 16px;
-  font-family: 'DM Sans', sans-serif;
-  resize:none; outline:none;
-  -webkit-appearance:none;
-  min-height:46px;
-  max-height:100px;
-  line-height:1.5;
-  overflow-y:auto;
-}
-.text-box::placeholder { color: rgba(201,168,76,0.35); }
-.text-box:focus { border-color: var(--gold); }
-
-.send-btn {
-  background: var(--gold);
-  border:none;
-  width:46px; height:46px;
-  border-radius:4px;
-  cursor:pointer;
-  flex-shrink:0;
-  display:flex; align-items:center; justify-content:center;
-  transition: background 0.2s, transform 0.1s;
-}
-.send-btn:active { transform:scale(0.93); background: var(--gold-light); }
-.send-btn svg { color:#0a0a0f; }
-
-/* \u2500\u2500 OP\u00c7\u00d5ES DE ESCOLHA R\u00c1PIDA \u2500\u2500 */
 .choices {
   display:flex; flex-wrap:wrap; gap:8px;
-  padding: 0 0 4px;
-  animation: rise 0.4s ease forwards;
-  opacity:0;
+  padding:0 0 4px;
+  animation:rise 0.4s ease forwards; opacity:0;
 }
 .choice-btn {
-  background: rgba(201,168,76,0.07);
-  border: 1px solid rgba(201,168,76,0.3);
+  background:rgba(201,168,76,0.07);
+  border:1px solid rgba(201,168,76,0.3);
   border-radius:30px;
   padding:8px 16px;
-  color: var(--gold-light);
+  color:var(--gold-light);
   font-size:0.82rem;
   font-family:'DM Sans',sans-serif;
   cursor:pointer;
-  transition: all 0.2s;
+  transition:all 0.2s;
 }
 .choice-btn:hover, .choice-btn:active {
-  background: rgba(201,168,76,0.18);
-  border-color: var(--gold);
+  background:rgba(201,168,76,0.18);
+  border-color:var(--gold);
 }
-
-/* \u2500\u2500 CTA FINAL \u2500\u2500 */
+.input-zone {
+  flex-shrink:0;
+  padding:10px 16px;
+  padding-bottom:calc(10px + env(safe-area-inset-bottom));
+  background:rgba(10,10,15,0.97);
+  border-top:1px solid var(--line);
+  display:flex; gap:10px; align-items:flex-end;
+}
+.text-box {
+  flex:1;
+  background:rgba(201,168,76,0.06);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:4px;
+  padding:12px 16px;
+  color:#f5f0e8;
+  font-size:16px;
+  font-family:'DM Sans',sans-serif;
+  resize:none; outline:none;
+  -webkit-appearance:none;
+  min-height:46px; max-height:100px;
+  line-height:1.5; overflow-y:auto;
+}
+.text-box::placeholder { color:rgba(201,168,76,0.35); }
+.text-box:focus { border-color:var(--gold); }
+.send-btn {
+  background:var(--gold); border:none;
+  width:46px; height:46px; border-radius:4px;
+  cursor:pointer; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  transition:background 0.2s,transform 0.1s;
+}
+.send-btn:active { transform:scale(0.93); background:var(--gold-light); }
+.send-btn svg { color:#0a0a0f; }
 #cta-block {
   display:none;
-  padding: 20px;
-  padding-bottom: calc(20px + env(safe-area-inset-bottom));
-  background: rgba(10,10,15,0.97);
-  border-top: 1px solid var(--line);
+  padding:20px;
+  padding-bottom:calc(20px + env(safe-area-inset-bottom));
+  background:rgba(10,10,15,0.97);
+  border-top:1px solid var(--line);
   flex-shrink:0;
 }
-
 .cta-context {
-  font-size:0.75rem;
-  color: var(--muted);
-  text-align:center;
-  margin-bottom:12px;
-  letter-spacing:1px;
-  text-transform:uppercase;
+  font-size:0.72rem; color:var(--muted);
+  text-align:center; margin-bottom:12px;
+  letter-spacing:1px; text-transform:uppercase;
+}
+.cta-btn {
+  display:block; width:100%;
+  background:linear-gradient(135deg,#b8922a,var(--gold),#e8c86a);
+  color:#0a0a0f;
+  padding:17px 24px; border-radius:4px;
+  font-weight:700; text-decoration:none;
+  text-align:center; font-size:0.95rem;
+  letter-spacing:1.5px; text-transform:uppercase;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:0 0 40px rgba(201,168,76,0.25),0 4px 20px rgba(0,0,0,0.4);
+  animation:glow-pulse 3s infinite;
+  position:relative; overflow:hidden;
+}
+.cta-btn::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);
+  transform:translateX(-100%);
+  animation:shimmer 3s 1s infinite;
+}
+.cta-sub {
+  text-align:center; margin-top:10px;
+  font-size:0.72rem; color:var(--muted); letter-spacing:0.5px;
+}
+@keyframes rise {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes glow-pulse {
+  0%,100% { box-shadow:0 0 30px rgba(201,168,76,0.2); }
+  50%     { box-shadow:0 0 55px rgba(201,168,76,0.45); }
+}
+@keyframes shimmer { to { transform:translateX(220%); } }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="shell">
+  <div class="top-bar">
+    <div class="brand">A Decisão</div>
+    <div class="progress-ring">
+      <svg viewBox="0 0 32 32" width="36" height="36">
+        <circle class="ring-bg"   cx="16" cy="16" r="14"/>
+        <circle class="ring-fill" cx="16" cy="16" r="14" id="ring"/>
+      </svg>
+      <div class="ring-label" id="ring-label">0%</div>
+    </div>
+  </div>
+
+  <div id="feed"></div>
+
+  <form id="input-form" class="input-zone" action="javascript:void(0);">
+    <textarea id="user-input" class="text-box" placeholder="Escreva aqui…"
+              rows="1" autocomplete="off" spellcheck="false"></textarea>
+    <button type="submit" class="send-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </form>
+
+  <div id="cta-block">
+    <div class="cta-context">Sua jornada começa agora</div>
+    <a href="https://frequencia.nexus-manual.com.br" class="cta-btn">
+      QUERO MUDAR MINHA VIDA AGORA
+    </a>
+    <div class="cta-sub">Acesso imediato · Garantia de 7 dias</div>
+  </div>
+</div>
+
+<script>
+/* ── PARTÍCULAS ── */
+(function () {
+  const cv = document.getElementById('bg-canvas');
+  const cx = cv.getContext('2d');
+  let W, H;
+  const P = [];
+
+  function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 55; i++) P.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.2 + 0.3,
+    vx: (Math.random() - 0.5) * 0.12,
+    vy: -(Math.random() * 0.18 + 0.04),
+    o: Math.random() * 0.45 + 0.08
+  });
+
+  (function draw() {
+    cx.clearRect(0, 0, W, H);
+    P.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.y < -4) { p.y = H + 4; p.x = Math.random() * W; }
+      cx.beginPath();
+      cx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      cx.fillStyle = `rgba(201,168,76,${p.o})`;
+      cx.fill();
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+
+/* ── NOME ── */
+function extractName(text) {
+  const pats = [
+    /(?:meu nome\s+[eé]\s+)([a-záéíóúàâêôãõüçñ]+)/i,
+    /(?:me\s+chamo\s+)([a-záéíóúàâêôãõüçñ]+)/i,
+    /(?:pode(?:m)?\s+me\s+chamar\s+de\s+)([a-záéíóúàâêôãõüçñ]+)/i,
+    /(?:sou\s+(?:o\s+|a\s+)?)([a-záéíóúàâêôãõüçñ]+)/i,
+    /(?:^|\s)(?:é\s+(?:o\s+|a\s+)?)([a-záéíóúàâêôãõüçñ]+)/i,
+    /(?:chamo\s+)([a-záéíóúàâêôãõüçñ]+)/i,
+  ];
+  for (const p of pats) {
+    const m = text.match(p);
+    if (m && m[1]) return cap(m[1]);
+  }
+  const words = text.trim().split(/\s+/);
+  const last  = words[words.length - 1].replace(/[^a-záéíóúàâêôãõüçñ]/gi, '');
+  return cap(last) || 'você';
+}
+function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : ''; }
+
+/* ── PROGRESSO ── */
+function setProgress(n, total) {
+  const pct    = Math.round((n / total) * 100);
+  const offset = 88 - (pct / 100) * 88;
+  document.getElementById('ring').style.strokeDashoffset = offset;
+  document.getElementById('ring-label').textContent = pct + '%';
 }
 
-.cta-btn {
-  display:block;
-  width:100%;
-  background: linear-gradient(135deg, #b8922a 0%, var(--gold) 50%, #e8c86a 100%);
-  color: #0a0a0f;
-  padding
+/* ── UTILITÁRIOS ── */
+const feed      = document.getElementById('feed');
+const inputForm = document.getElementById('input-form');
+const inputEl   = document.getElementById('user-input');
+const inputZone = document.getElementById('input-form');
+const ctaBlock  = document.getElementById('cta-block');
+
+function sleep(ms)  { return new Promise(r => setTimeout(r, ms)); }
+function esc(t)     { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── MENSAGEM AI (typewriter) ── */
+async function addAI(html, speed = 13) {
+  const wrap  = document.createElement('div');
+  wrap.className = 'msg ai';
+  const inner = document.createElement('div');
+  inner.className = 'inner';
+  wrap.appendChild(inner);
+  feed.appendChild(wrap);
+  feed.scrollTop = feed.scrollHeight;
+
+  const tokens = html.split(/(<[^>]+>)/g);
+  let buf = '';
+  const cursor = '<span style="color:#c9a84c;opacity:.7">▍</span>';
+
+  for (const tok of tokens) {
+    if (tok.startsWith('<')) {
+      buf += tok;
+      inner.innerHTML = buf + cursor;
+    } else {
+      for (const ch of tok) {
+        buf += ch;
+        inner.innerHTML = buf + cursor;
+        feed.scrollTop = feed.scrollHeight;
+        await sleep(speed);
+      }
+    }
+  }
+  inner.innerHTML = buf;
+  feed.scrollTop = feed.scrollHeight;
+}
+
+/* ── MENSAGEM USUÁRIO ── */
+function addUser(text) {
+  const wrap = document.createElement('div');
+  wrap.className = 'msg user';
+  wrap.innerHTML = `<div class="inner">${esc(text)}</div>`;
+  feed.appendChild(wrap);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+/* ── DIVISOR ── */
+function addDivider(label) {
+  const d = document.createElement('div');
+  d.className = 'chapter-divider';
+  d.innerHTML = `<span>${label}</span>`;
+  feed.appendChild(d);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+/* ── ESCOLHAS (retorna Promise com a opção escolhida) ── */
+function addChoices(options) {
+  return new Promise(resolve => {
+    const wrap = document.createElement('div');
+    wrap.className = 'choices';
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => {
+        wrap.remove();
+        addUser(opt);
+        resolve(opt);
+      });
+      wrap.appendChild(btn);
+    });
+    feed.appendChild(wrap);
+    feed.scrollTop = feed.scrollHeight;
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   NARRATIVA COMPLETA — 3 ATOS
+   Ato I   · O Diagnóstico   (steps 1–2)
+   Ato II  · A Verdade       (steps 3–4)
+   Ato III · A Decisão       (step 5)
+═══════════════════════════════════════════════ */
+const TOTAL = 5;
+let name = '';
+
+async function narrative() {
+
+  /* ═══ ABERTURA ═══ */
+  await sleep(800);
+  await addAI(`Você não chegou aqui por acaso.`, 22);
+  await sleep(650);
+  await addAI(`Algo — uma inquietação, uma voz interna, uma insatisfação silenciosa — te trouxe até este momento.<br><br>Antes de continuar, preciso saber com quem estou falando.<br><br><em>Qual é o seu nome?</em>`, 13);
+
+  /* aguarda o usuário digitar o nome no input */
+  name = await waitForInput();
+  addUser(name);
+  setProgress(1, TOTAL);
+
+  /* ═══ ATO I · O DIAGNÓSTICO ═══ */
+  await sleep(450);
+  await addAI(`Interessante você estar aqui, <em>${name}</em>.`);
+  await sleep(600);
+  await addAI(`A maioria das pessoas que chega até esse ponto passou meses — às vezes anos — com uma sensação difícil de nomear.<br><br>Não é fracasso. Não é preguiça.<br>É um <em>desalinhamento silencioso</em> entre quem você é e quem você sabe que poderia ser.`);
+  await sleep(600);
+  await addAI(`Deixa eu te perguntar algo diretamente:<br><br>Quando você olha para a sua rotina hoje… ela te representa de verdade?`);
+
+  await addChoices(['Não muito, algo está faltando', 'Sim, mas poderia ser muito mais', 'Honestamente… não']);
+  setProgress(2, TOTAL);
+
+  await sleep(500);
+  await addAI(`Essa resposta diz muito sobre você, ${name}.<br><br>Sabe o que é curioso? As pessoas que chegam aqui raramente estão destruídas. Pelo contrário — elas <em>sentem que têm mais a dar.</em><br><br>E é isso que dói: saber que existe uma versão mais poderosa sua… e não conseguir acessá-la.`);
+  await sleep(700);
+  await addAI(`Vou ser direto agora.<br><br>Se você fosse completamente honesto consigo mesmo neste momento — <em>o que você mais adia na sua vida?</em>`);
+
+  await addChoices(['Minha saúde e energia', 'Minha vida financeira', 'Meu propósito e foco', 'Meus relacionamentos']);
+  setProgress(3, TOTAL);
+
+  /* ═══ ATO II · A VERDADE INCÔMODA ═══ */
+  await sleep(300);
+  addDivider('Ato II · A Verdade Incômoda');
+  await sleep(800);
+
+  await addAI(`Agora preciso te dizer algo que quase ninguém fala, ${name}.`);
+  await sleep(600);
+  await addAI(`Não adiamos coisas por falta de vontade.<br>Adiamos porque o nosso cérebro faz um cálculo distorcido:<br><br><em>O custo mental de começar parece maior que o benefício de mudar.</em><br><br>É uma ilusão cognitiva. E ela se repete silenciosamente, todo dia.`);
+  await sleep(900);
+  await addAI(`Cada dia sem movimento não é neutro, ${name}.<br>É um investimento involuntário no status quo — e o status quo <em>tem juros.</em><br><br>Pensa: quanto tempo você já está nesse ciclo?<br>Multiplica isso por tudo que você poderia ter construído nesse período.`);
+  await sleep(700);
+  await addAI(`Não estou dizendo isso para te culpar.<br>Estou dizendo porque <em>você ainda tem tempo.</em><br>Mas a janela não fica aberta para sempre.`);
+  await sleep(600);
+  await addAI(`Se eu te dissesse que existe um protocolo capaz de reorganizar sua mente e colocar você em movimento nos próximos 30 dias…<br><br>Qual seria sua maior dúvida?`);
+
+  await addChoices(['Se realmente funciona', 'Se funciona especificamente pra mim', 'Se vou ter disciplina pra seguir', 'Quanto tempo vai levar']);
+  setProgress(4, TOTAL);
+
+  await sleep(500);
+  await addAI(`Essa dúvida é completamente legítima, ${name}. É a que mais aparece.<br><br>Deixa eu ser honesto:`);
+  await sleep(700);
+  await addAI(`O problema nunca foi falta de método.<br>O problema é que a maioria dos métodos trata os sintomas — e ignora a <em>raiz neurológica do bloqueio.</em><br><br>O que você vai acessar não é mais um curso de produtividade ou motivação de palco.<br>É uma <em>reprogramação da forma como você processa decisões e constrói ação.</em>`);
+  await sleep(800);
+  await addAI(`Foram mais de 3 anos condensados num protocolo que integra neurociência comportamental, filosofia estoica e psicologia de alta performance.<br><br>Não teoria. <em>Protocolo aplicável.</em> Com resultado documentado no mundo real.`);
+  await sleep(700);
+  await addAI(`${name}, uma última pergunta — e quero a sua resposta mais honesta.<br><br><em>Se você soubesse com certeza que ia funcionar… você começaria hoje?</em>`);
+
+  await addChoices(['Sim, sem hesitar', 'Acho que sim', 'Precisaria entender melhor']);
+
+  /* ═══ ATO III · A DECISÃO ═══ */
+  await sleep(300);
+  addDivider('Ato III · A Decisão');
+  await sleep(900);
+
+  await addAI(`Essa resposta me diz tudo, ${name}.<br><br>Você não precisa de mais informação.<br>Você precisa de <em>permissão para começar.</em>`);
+  await sleep(900);
+  await addAI(`E essa permissão só pode vir de um lugar:<br>de você mesmo.<br><br>O fato de você ter chegado até aqui — respondido cada pergunta com honestidade — já prova que a versão que você quer ser <em>já está ativa dentro de você.</em><br><br>Ela está esperando. Há muito tempo.`);
+  await sleep(1000);
+  await addAI(`Hoje você pode fazer uma de duas coisas.<br><br>Fechar essa janela. Voltar à rotina. E daqui a 6 meses estar no mesmo ponto, fazendo as mesmas perguntas.<br><br>Ou dar o <em>único passo</em> que separa quem você é agora de quem você pode ser.`);
+  await sleep(1000);
+  await addAI(`Não tem meio-termo, ${name}.<br><br>Toda transformação começa com um momento.<br><em>Este é o seu.</em>`);
+  await sleep(1300);
+
+  setProgress(5, TOTAL);
+  inputZone.style.display = 'none';
+  ctaBlock.style.display = 'block';
+  feed.scrollTop = feed.scrollHeight;
+}
+
+/* ── AGUARDA INPUT DO USUÁRIO (usado só para o nome) ── */
+let _inputResolver = null;
+
+function waitForInput() {
+  return new Promise(resolve => { _inputResolver = resolve; });
+}
+
+inputForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const text = inputEl.value.trim();
+  if (!text) return;
+  const resolved = extractName(text);
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
+  if (_inputResolver) {
+    const fn = _inputResolver;
+    _inputResolver = null;
+    fn(resolved);
+  }
+});
+
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    inputForm.dispatchEvent(new Event('submit'));
+  }
+});
+
+inputEl.addEventListener('input', () => {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 100) + 'px';
+});
+
+/* ── START ── */
+window.addEventListener('load', () => { narrative(); });
+</script>
+</body>
+</html>
