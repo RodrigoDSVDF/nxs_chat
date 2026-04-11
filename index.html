@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>A Decis\u00e3o</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0a0f;
+  --paper: #f5f0e8;
+  --gold: #c9a84c;
+  --gold-light: #e8d08a;
+  --red: #8b1a1a;
+  --muted: #7a7060;
+  --line: rgba(201,168,76,0.25);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  height:100%; width:100%;
+  background: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  overflow: hidden;
+  position: fixed;
+}
+
+/* \u2500\u2500 CANVAS PART\u00cdCULAS \u2500\u2500 */
+#bg-canvas {
+  position:fixed; inset:0; z-index:1;
+  pointer-events:none;
+}
+
+/* \u2500\u2500 WRAPPER \u2500\u2500 */
+.shell {
+  position: absolute; inset:0; z-index:10;
+  display:flex; flex-direction:column;
+  height:100vh; height:100dvh;
+}
+
+/* \u2500\u2500 HEADER \u2500\u2500 */
+.top-bar {
+  flex-shrink:0;
+  padding: 18px 20px 14px;
+  display:flex; align-items:center; justify-content:space-between;
+  background: linear-gradient(to bottom, rgba(10,10,15,0.98), transparent);
+}
+
+.brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.8rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.progress-ring {
+  width:36px; height:36px; position:relative;
+}
+.progress-ring svg { transform: rotate(-90deg); }
+.progress-ring circle { fill:none; stroke-width:2; }
+.ring-bg { stroke: rgba(201,168,76,0.2); }
+.ring-fill {
+  stroke: var(--gold);
+  stroke-dasharray: 88;
+  stroke-dashoffset: 88;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
+}
+.ring-label {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:500; color:var(--gold);
+}
+
+/* \u2500\u2500 CHAT FEED \u2500\u2500 */
+#feed {
+  flex:1;
+  overflow-y:auto;
+  padding: 16px 20px 8px;
+  display:flex; flex-direction:column; gap:16px;
+  -webkit-overflow-scrolling: touch;
+  mask-image: linear-gradient(to bottom, transparent, black 6%, black 94%, transparent);
+}
+
+/* scrollbar invis\u00edvel */
+#feed::-webkit-scrollbar { display:none; }
+
+/* \u2500\u2500 BOLHAS \u2500\u2500 */
+.msg {
+  animation: rise 0.45s cubic-bezier(0.16,1,0.3,1) forwards;
+  opacity:0;
+  position:relative;
+}
+
+.msg.ai .inner {
+  max-width: 86%;
+  background: rgba(15,14,20,0.92);
+  border: 1px solid var(--line);
+  border-radius: 2px 18px 18px 18px;
+  padding: 14px 18px;
+  color: #e8e4d8;
+  font-size: 0.93rem;
+  line-height: 1.7;
+  position:relative;
+  backdrop-filter: blur(8px);
+}
+
+/* linha dourada lateral */
+.msg.ai .inner::before {
+  content:'';
+  position:absolute;
+  left:0; top:12px; bottom:12px;
+  width:2px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  border-radius:2px;
+}
+
+.msg.user {
+  align-self:flex-end;
+}
+.msg.user .inner {
+  background: linear-gradient(135deg, #1a1408 0%, #2a1f08 100%);
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 18px 2px 18px 18px;
+  padding: 12px 18px;
+  color: var(--gold-light);
+  font-size: 0.9rem;
+  font-weight:500;
+  max-width:82%;
+  text-align:right;
+}
+
+/* DESTAQUE em it\u00e1lico dourado */
+.msg.ai .inner em {
+  font-style:italic;
+  color: var(--gold-light);
+  font-family: 'Playfair Display', serif;
+}
+
+/* Cursor piscante */
+.cursor-blink::after {
+  content:'\u258d';
+  color:var(--gold);
+  animation: blink 0.7s infinite;
+  font-size:0.8rem;
+  margin-left:2px;
+}
+
+/* \u2500\u2500 DIVISOR NARRATIVO \u2500\u2500 */
+.chapter-divider {
+  display:flex; align-items:center; gap:12px;
+  opacity:0;
+  animation: rise 0.5s ease forwards;
+  margin: 4px 0;
+}
+.chapter-divider span {
+  font-family: 'Playfair Display', serif;
+  font-style:italic;
+  font-size:0.7rem;
+  color: var(--gold);
+  letter-spacing:2px;
+  white-space:nowrap;
+  opacity:0.7;
+}
+.chapter-divider::before, .chapter-divider::after {
+  content:''; flex:1;
+  height:1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  opacity:0.3;
+}
+
+/* \u2500\u2500 INPUT ZONE \u2500\u2500 */
+.input-zone {
+  flex-shrink:0;
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  background: rgba(10,10,15,0.97);
+  border-top: 1px solid var(--line);
+  display:flex; gap:10px; align-items:flex-end;
+}
+
+.text-box {
+  flex:1;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 4px;
+  padding: 12px 16px;
+  color: var(--paper);
+  font-size: 16px;
+  font-family: 'DM Sans', sans-serif;
+  resize:none; outline:none;
+  -webkit-appearance:none;
+  min-height:46px;
+  max-height:100px;
+  line-height:1.5;
+  overflow-y:auto;
+}
+.text-box::placeholder { color: rgba(201,168,76,0.35); }
+.text-box:focus { border-color: var(--gold); }
+
+.send-btn {
+  background: var(--gold);
+  border:none;
+  width:46px; height:46px;
+  border-radius:4px;
+  cursor:pointer;
+  flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  transition: background 0.2s, transform 0.1s;
+}
+.send-btn:active { transform:scale(0.93); background: var(--gold-light); }
+.send-btn svg { color:#0a0a0f; }
+
+/* \u2500\u2500 OP\u00c7\u00d5ES DE ESCOLHA R\u00c1PIDA \u2500\u2500 */
+.choices {
+  display:flex; flex-wrap:wrap; gap:8px;
+  padding: 0 0 4px;
+  animation: rise 0.4s ease forwards;
+  opacity:0;
+}
+.choice-btn {
+  background: rgba(201,168,76,0.07);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius:30px;
+  padding:8px 16px;
+  color: var(--gold-light);
+  font-size:0.82rem;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;
+  transition: all 0.2s;
+}
+.choice-btn:hover, .choice-btn:active {
+  background: rgba(201,168,76,0.18);
+  border-color: var(--gold);
+}
+
+/* \u2500\u2500 CTA FINAL \u2500\u2500 */
+#cta-block {
+  display:none;
+  padding: 20px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  background: rgba(10,10,15,0.97);
+  border-top: 1px solid var(--line);
+  flex-shrink:0;
+}
+
+.cta-context {
+  font-size:0.75rem;
+  color: var(--muted);
+  text-align:center;
+  margin-bottom:12px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.cta-btn {
+  display:block;
+  width:100%;
+  background: linear-gradient(135deg, #b8922a 0%, var(--gold) 50%, #e8c86a 100%);
+  color: #0a0a0f;
+  padding
