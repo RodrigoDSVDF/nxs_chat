@@ -417,17 +417,17 @@ async function narrative() {
 
   /* ═══ ATO I · O DIAGNÓSTICO ═══ */
   await sleep(450);
-  await addAI(`Interessante você estar aqui, <em>${name}</em>.`);
+  await addAI(`Muito prezer, <em>${name}</em>, parabéns por ter chegado até aqui`);
   await sleep(600);
   await addAI(`A maioria das pessoas que chega até esse ponto passou meses — às vezes anos — com uma sensação difícil de nomear.<br><br>Não é fracasso. Não é preguiça.<br>É um <em>desalinhamento silencioso</em> entre quem você é e quem você sabe que poderia ser.`);
   await sleep(600);
-  await addAI(`Deixa eu te perguntar algo diretamente:<br><br>Quando você olha para a sua rotina hoje… ela te representa de verdade?`);
+  await addAI(`Deixa eu te perguntar algo diretamente:<br><br>Quando você olha para a sua vida hoje… ela te representa de verdade?`);
 
-  await addChoices(['Não muito, algo está faltando', 'Sim, mas poderia ser muito mais', 'Honestamente… não']);
+  await addChoices(['Não muito, algo está faltando', 'Sim, mas poderia ser melhor', 'Honestamente… não']);
   setProgress(2, TOTAL);
 
   await sleep(500);
-  await addAI(`Essa resposta diz muito sobre você, ${name}.<br><br>Sabe o que é curioso? As pessoas que chegam aqui raramente estão destruídas. Pelo contrário — elas <em>sentem que têm mais a dar.</em><br><br>E é isso que dói: saber que existe uma versão mais poderosa sua… e não conseguir acessá-la.`);
+  await addAI(`Muito bem, essa resposta diz muito sobre você, ${name}.<br><br>Sabe o que é curioso? As pessoas que chegam aqui raramente estão destruídas. Pelo contrário — elas <em>sentem que têm mais a dar.</em><br><br>E é isso que dói: saber que existe uma versão mais poderosa sua… e não conseguir acessá-la.`);
   await sleep(700);
   await addAI(`Vou ser direto agora.<br><br>Se você fosse completamente honesto consigo mesmo neste momento — <em>o que você mais adia na sua vida?</em>`);
 
